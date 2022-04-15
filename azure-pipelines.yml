@@ -7,7 +7,7 @@ pool:
     demands:
     - Terraform -equals True
 variables:
-      DESTROY: 'NO'
+      DESTROY: 'YES'
       PACKERBUILD: 'NO'
 
 stages:
