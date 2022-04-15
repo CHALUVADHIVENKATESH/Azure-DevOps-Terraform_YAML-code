@@ -1,0 +1,135 @@
+trigger: 
+  - master
+
+#For using single agent for all stages use below code. 
+pool: 
+    name: LinuxAgentPool
+    demands:
+    - Terraform -equals True
+variables:
+      DESTROY: 'YES'
+      PACKERBUILD: 'NO'
+
+stages:
+    - stage: 'Packer_Validate_Build'
+      displayName: 'Packer Validate & Build'
+      condition: eq(variables.PACKERBUILD, 'YES')      
+      jobs:
+      - job: "Download_Secure_Files"
+        displayName: 'Download_Secure_Files'        
+        steps:
+        - task: DownloadSecureFile@1
+          inputs:
+            secureFile: 'packer-vars.json'
+
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: '$(Agent.TempDirectory)'
+            Contents: '**'
+            TargetFolder: '/home/adminsree/myagent/_work/2/s/'
+
+        - script:  pwd && ls -al
+          displayName: 'Files_Check'
+
+        - script:  packer validate -var-file packer-vars.json packer.json 
+          displayName: 'Packer Validate'
+
+        - script:  packer build -var-file packer-vars.json packer.json 
+          displayName: 'Packer Build'
+
+    - stage: 'Download_Secure_Files_and_Terraform_Validate'
+      displayName: 'Terraform Validate & Download Secure Files'
+      condition: in(dependencies.Packer_Validate_Build.result, 'Succeeded', 'Skipped')     
+      jobs:
+      - job: "Download_Secure_Files"
+        displayName: 'Download_Secure_Files'        
+        steps:
+        - task: DownloadSecureFile@1
+          inputs:
+            secureFile: 'backend.json'
+
+        - task: DownloadSecureFile@1
+          inputs:
+            secureFile: 'access.auto.tfvars'
+
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: '$(Agent.TempDirectory)'
+            Contents: '**'
+            TargetFolder: '/home/adminsree/myagent/_work/2/s/'
+
+        - script:  pwd && ls -al
+          displayName: 'Files_Check'
+
+        - script:  terraform init -backend-config=backend.json
+          displayName: 'Terraform_Initialize'
+
+        - script:  terraform validate
+          displayName: 'Terraform_Validate'
+
+    - stage: 'Download_Secure_Files_and_Terraform_Plan_and_Apply'
+      displayName: 'Terraform Plan & Apply & Download Secure Files'
+      condition: in(dependencies.Packer_Validate_Build.result, 'Succeeded', 'Skipped') 
+      
+      jobs:
+      - job: "Download_Secure_Files_And_Terraform_Apply"
+        displayName: 'Download_Secure_Files_And_Terraform_Apply'
+        
+        steps:
+        - task: DownloadSecureFile@1
+          inputs:
+            secureFile: 'backend.json'
+
+        - task: DownloadSecureFile@1
+          inputs:
+            secureFile: 'access.auto.tfvars'
+
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: '$(Agent.TempDirectory)'
+            Contents: '**'
+            TargetFolder: '/home/adminsree/myagent/_work/2/s/'
+
+        - script:  pwd && ls -al
+          displayName: 'Files_Check'
+
+        - script:  terraform init -backend-config=backend.json
+          displayName: 'Terraform_Initialize'
+
+        - script:  terraform plan
+          displayName: 'Terraform_Plan'
+
+        - script:  terraform apply --auto-approve
+          displayName: 'Terraform_Apply'
+
+    - stage: 'Download_Secure_Files_and_Terraform_Destroy_Variable'
+      displayName: 'Terraform Destroy & Download Secure Files'
+      condition: eq(variables.DESTROY, 'YES')
+      
+      jobs:
+      - job: "Terraform_Destroy"
+        displayName: 'Terraform_Destroy'
+        
+        steps:
+             - task: DownloadSecureFile@1
+               inputs:
+                 secureFile: 'backend.json'
+     
+             - task: DownloadSecureFile@1
+               inputs:
+                 secureFile: 'access.auto.tfvars'
+     
+             - task: CopyFiles@2
+               inputs:
+                 SourceFolder: '$(Agent.TempDirectory)'
+                 Contents: '**'
+                 TargetFolder: '/home/adminsree/myagent/_work/2/s/'
+     
+             - script:  pwd && ls -al
+               displayName: 'Files_Check'
+     
+             - script:  terraform init -backend-config=backend.json
+               displayName: 'Terraform_Initialize'
+     
+             - script:  terraform destroy --auto-approve
+               displayName: 'Terraform_Destroy'
