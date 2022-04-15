@@ -7,8 +7,8 @@ pool:
     demands:
     - Terraform -equals True
 variables:
-      DESTROY: 'YES'
-      PACKERBUILD: 'NO'
+      DESTROY: 'NO'
+      PACKERBUILD: 'YES'
 
 stages:
     - stage: 'Packer_Validate_Build'
