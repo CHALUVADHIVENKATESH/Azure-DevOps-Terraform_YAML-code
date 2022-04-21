@@ -89,10 +89,10 @@ resource "aws_security_group" "allow_all" {
     }
 }
 
-terraform {
-  backend "s3" {
-    bucket = "sreeterraformbucket"
-    key    = "azureb22tfyaml.tfstate"
-    region = "us-east-1"
-  }
-}
+# terraform {
+#   backend "s3" {
+#     bucket = "sreeterraformbucket"
+#     key    = "azureb22tfyaml.tfstate"
+#     region = "us-east-1"
+#   }
+# }
