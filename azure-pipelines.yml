@@ -26,7 +26,7 @@ stages:
           inputs:
             SourceFolder: '$(Agent.TempDirectory)'
             Contents: '**'
-            TargetFolder: '/home/adminsree/myagent/_work/2/s/'
+            TargetFolder: '/home/ubuntu/myagent/_work/2/s/'
 
         - script:  pwd && ls -al
           displayName: 'Files_Check'
@@ -56,7 +56,7 @@ stages:
           inputs:
             SourceFolder: '$(Agent.TempDirectory)'
             Contents: '**'
-            TargetFolder: '/home/adminsree/myagent/_work/2/s/'
+            TargetFolder: '/home/ubuntu/myagent/_work/2/s/'
 
         - script:  pwd && ls -al
           displayName: 'Files_Check'
@@ -88,7 +88,7 @@ stages:
           inputs:
             SourceFolder: '$(Agent.TempDirectory)'
             Contents: '**'
-            TargetFolder: '/home/adminsree/myagent/_work/2/s/'
+            TargetFolder: '/home/ubuntu/myagent/_work/2/s/'
 
         - script:  pwd && ls -al
           displayName: 'Files_Check'
@@ -123,7 +123,7 @@ stages:
                inputs:
                  SourceFolder: '$(Agent.TempDirectory)'
                  Contents: '**'
-                 TargetFolder: '/home/adminsree/myagent/_work/2/s/'
+                 TargetFolder: '/home/ubuntu/myagent/_work/2/s/'
      
              - script:  pwd && ls -al
                displayName: 'Files_Check'
