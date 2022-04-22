@@ -5,7 +5,7 @@ variable "amis" {
     description = "AMIs by region"
     default = {
         us-east-1 = "ami-97785bed" # ubuntu 14.04 LTS
-		us-east-2 = "ami-02af65b2d1ebdfafc" # ubuntu 14.04 LTS
+		us-east-2 = "ami-0fb653ca2d3203ac1" # ubuntu 14.04 LTS
 		us-west-1 = "ami-824c4ee2" # ubuntu 14.04 LTS
 		us-west-2 = "ami-f2d3638a" # ubuntu 14.04 LTS
     }
@@ -25,7 +25,7 @@ variable "private_subnet_name" {}
 variable Main_Routing_Table {}
 variable "azs" {
   description = "Run the EC2 Instances in these Availability Zones"
-  default = ["us-east-1a", "us-east-1b", "us-east-1c"]
+  default = ["us-east-2a", "us-east-2b", "us-east-2c"]
 }
 variable "environment" { default = "dev" }
 variable "instance_type" {
