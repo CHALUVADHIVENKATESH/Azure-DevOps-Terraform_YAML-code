@@ -3,7 +3,7 @@ trigger:
 
 #For using single agent for all stages use below code. 
 pool: 
-    name: LinuxAgentPool
+    name: NewProject1
     demands:
     - Terraform -equals True
 variables:
